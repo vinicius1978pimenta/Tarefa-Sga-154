@@ -1,0 +1,73 @@
+<div class="container mt-4">
+  <h2>{{ taskId ? 'Editar Tarefa' : 'Nova Tarefa' }}</h2>
+
+  <form [formGroup]="taskForm" (ngSubmit)="submitForm()">
+    <!-- Título -->
+    <div class="mb-3">
+      <label class="form-label">Título</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="title"
+        [class.is-invalid]="taskForm.get('title')?.invalid && taskForm.get('title')?.touched"
+      />
+      <div class="invalid-feedback">O título é obrigatório.</div>
+    </div>
+
+    <!-- Categoria -->
+    <div class="mb-3">
+      <label class="form-label">Categoria</label>
+      <select
+        class="form-select"
+        formControlName="category"
+        [class.is-invalid]="taskForm.get('category')?.invalid && taskForm.get('category')?.touched"
+      >
+        <option value="">Selecione</option>
+        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+      </select>
+      <div class="invalid-feedback">A categoria é obrigatória.</div>
+    </div>
+
+    <!-- Data -->
+    <div class="mb-3">
+      <label for="dueDate" class="form-label">Data</label>
+      <input
+        type="date"
+        id="dueDate"
+        class="form-control"
+        formControlName="dueDate"
+        [class.is-invalid]="taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched"
+      />
+      <div class="invalid-feedback">Selecione uma data válida.</div>
+    </div>
+
+    <!-- Concluída -->
+    <div class="mb-3">
+      <label class="form-label d-block">Concluída</label>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          formControlName="completed"
+          [value]="true"
+          id="completedYes"
+        />
+        <label class="form-check-label" for="completedYes">Sim</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          formControlName="completed"
+          [value]="false"
+          id="completedNo"
+        />
+        <label class="form-check-label" for="completedNo">Não</label>
+      </div>
+    </div>
+
+    <!-- Botões -->
+    <button type="submit" class="btn btn-success">{{ taskId ? 'Atualizar' : 'Criar' }}</button>
+    <a routerLink="/" class="btn btn-secondary ms-2">Cancelar</a>
+  </form>
+</div>

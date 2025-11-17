@@ -1,0 +1,48 @@
+<div class="container mt-4">
+  <h2>Lista de Tarefas</h2>
+
+  <table class="table table-striped" *ngIf="taskService.tasks().length > 0; else noTasks">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Concluída</th>
+        <th>Categoria</th>
+        <th>Data</th> 
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of taskService.tasks()">
+        <td>{{ task.title }}</td>
+
+        <!-- Checkbox completed -->
+        <td>
+          <input
+            type="checkbox"
+            [checked]="task.completed"
+            (change)="toggleComplete(task, $event.target.checked)"
+          />
+        </td>
+
+        <td>{{ task.category }}</td>
+
+        <!-- Data formatada -->
+        <td>{{ task.dueDate | date:'dd/MM/yyyy' }}</td>
+
+
+        <td>
+          <a [routerLink]="['/edit', task.id]" class="btn btn-sm btn-primary me-2">Editar</a>
+          <button class="btn btn-sm btn-danger" (click)="deleteTask(task)">Excluir</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noTasks>
+    <div class="alert alert-info mt-3">
+      Nenhuma tarefa cadastrada.
+    </div>
+  </ng-template>
+
+  <a routerLink="/create" class="btn btn-success mt-3">Nova Tarefa</a>
+</div>
