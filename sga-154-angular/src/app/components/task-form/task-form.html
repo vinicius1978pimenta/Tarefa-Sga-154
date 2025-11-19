@@ -2,6 +2,7 @@
   <h2>{{ taskId ? 'Editar Tarefa' : 'Nova Tarefa' }}</h2>
 
   <form [formGroup]="taskForm" (ngSubmit)="submitForm()">
+
     <!-- Título -->
     <div class="mb-3">
       <label class="form-label">Título</label>
@@ -23,7 +24,11 @@
         [class.is-invalid]="taskForm.get('category')?.invalid && taskForm.get('category')?.touched"
       >
         <option value="">Selecione</option>
-        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+
+        @for (c of categories; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+
       </select>
       <div class="invalid-feedback">A categoria é obrigatória.</div>
     </div>
@@ -44,6 +49,7 @@
     <!-- Concluída -->
     <div class="mb-3">
       <label class="form-label d-block">Concluída</label>
+
       <div class="form-check form-check-inline">
         <input
           class="form-check-input"
@@ -54,6 +60,7 @@
         />
         <label class="form-check-label" for="completedYes">Sim</label>
       </div>
+
       <div class="form-check form-check-inline">
         <input
           class="form-check-input"
@@ -67,7 +74,10 @@
     </div>
 
     <!-- Botões -->
-    <button type="submit" class="btn btn-success">{{ taskId ? 'Atualizar' : 'Criar' }}</button>
+    <button type="submit" class="btn btn-success">
+      {{ taskId ? 'Atualizar' : 'Criar' }}
+    </button>
+
     <a routerLink="/" class="btn btn-secondary ms-2">Cancelar</a>
   </form>
 </div>

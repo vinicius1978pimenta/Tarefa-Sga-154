@@ -3,40 +3,46 @@
 
   <!-- Barra de pesquisa e filtro de categoria -->
   <div class="row mb-4">
-  <!-- Input para digitar o título -->
-  <div class="col-md-4 mb-2">
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Pesquisar por título..."
-      [value]="search()"
-      (input)="search.set($event.target.value)"
-    />
+
+    <!-- Input para digitar o título -->
+    <div class="col-md-4 mb-2">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Pesquisar por título..."
+        [value]="search()"
+        (input)="search.set($event.target.value)"
+      />
+    </div>
+
+    <!-- Select para categoria -->
+    <div class="col-md-4 mb-2">
+      <select
+        class="form-select"
+        [value]="categoryFilter()"
+        (change)="onCategoryChange($event)"
+      >
+        <option value="">Todas as categorias</option>
+
+        @for (cat of categories(); track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+
+      </select>
+    </div>
+
+    <!-- Input para filtrar por data -->
+    <div class="col-md-4 mb-2">
+      <input
+        type="date"
+        class="form-control"
+        [value]="dateFilter()"
+        (change)="dateFilter.set($event.target.value)"
+      />
+    </div>
   </div>
 
-  <!-- Select para categoria -->
-  <div class="col-md-4 mb-2">
-    <select
-      class="form-select"
-      [value]="categoryFilter()"
-      (change)="onCategoryChange($event)"
-    >
-      <option value="">Todas as categorias</option>
-      <option *ngFor="let cat of categories()" [value]="cat">{{ cat }}</option>
-    </select>
-  </div>
-
-  <!-- Input para filtrar por data -->
-  <div class="col-md-4 mb-2">
-    <input
-      type="date"
-      class="form-control"
-      [value]="dateFilter()"
-      (change)="dateFilter.set($event.target.value)"
-    />
-  </div>
-</div>
-    <!-- Checkbox para mostrar apenas tarefas não concluídas -->
+  <!-- Checkbox para mostrar apenas tarefas não concluídas -->
   <div class="col-md-4 mb-2 d-flex align-items-center">
     <input
       type="checkbox"
@@ -49,44 +55,52 @@
     </label>
   </div>
 
+  <!-- Tabela -->
+  @if (filteredTasks().length > 0) {
 
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Concluída</th>
+          <th>Categoria</th>
+          <th>Data</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
 
-  <!-- Tabela de tarefas filtradas -->
-  <table class="table table-striped" *ngIf="filteredTasks().length > 0; else noTasks">
-    <thead>
-      <tr>
-        <th>Título</th>
-        <th>Concluída</th>
-        <th>Categoria</th>
-        <th>Data</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let task of filteredTasks()">
-        <td>{{ task.title }}</td>
-        <td>
-          <input
-            type="checkbox"
-            [checked]="task.completed"
-            (change)="toggleComplete(task, $event.target.checked)"
-          />
-        </td>
-        <td>{{ task.category }}</td>
-        <td>{{ task.dueDate | date:'dd/MM/yyyy' }}</td>
-        <td>
-          <a [routerLink]="['/edit', task.id]" class="btn btn-sm btn-primary me-2">Editar</a>
-          <button class="btn btn-sm btn-danger" (click)="deleteTask(task)">Excluir</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <tbody>
+        @for (task of filteredTasks(); track task.id) {
+          <tr>
+            <td>{{ task.title }}</td>
 
-  <ng-template #noTasks>
+            <td>
+              <input
+                type="checkbox"
+                [checked]="task.completed"
+                (change)="toggleComplete(task, $event.target.checked)"
+              />
+            </td>
+
+            <td>{{ task.category }}</td>
+            <td>{{ task.dueDate | date:'dd/MM/yyyy' }}</td>
+
+            <td>
+              <a [routerLink]="['/edit', task.id]" class="btn btn-sm btn-primary me-2">Editar</a>
+              <button class="btn btn-sm btn-danger" (click)="deleteTask(task)">Excluir</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+  } @else {
+
     <div class="alert alert-info mt-3">
       Nenhuma tarefa encontrada.
     </div>
-  </ng-template>
+
+  }
 
   <a routerLink="/create" class="btn btn-success mt-3">Nova Tarefa</a>
 </div>
